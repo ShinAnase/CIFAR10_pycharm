@@ -1,5 +1,5 @@
 import numpy as np
-
+import torch
 from sklearn import preprocessing
 
 #自作app
@@ -19,6 +19,7 @@ param_space = {'hidden_size1': 512,
               }
 
 def Exec(param):
+    print(torch.cuda.is_available())
     # Tester(True/False)
     Tester = True
 
@@ -30,7 +31,7 @@ def Exec(param):
                                              loading.testFeature, loading.trainTarget)
 
     # CV folds
-    folds = CV_folds.Exec(train, targetOH)
+    folds = CV_folds.Exec(train, loading.trainTarget)
 
     # Config about Fitting
     confFitting = configAboutFitting.outputConfig(train, test, targetOH, folds)
