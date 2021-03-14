@@ -1,7 +1,9 @@
 import pickle
-import setting
 import numpy as np
 import pandas as pd
+
+from CIFAR10_pycharm.module.conf import setting
+
 
 #Loading
 def unpickle(file):
