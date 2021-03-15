@@ -1,5 +1,4 @@
 import numpy as np
-import torch
 from sklearn import preprocessing
 
 #自作app
@@ -19,7 +18,6 @@ param_space = {'hidden_size1': 512,
               }
 
 def Exec(param):
-    print(torch.cuda.is_available())
     # Tester(True/False)
     Tester = True
 

@@ -7,6 +7,7 @@ SUBMIT = OUTPUT + "/submittion/"
 SAVEMODEL = OUTPUT + "/model/Pytorch/"
 SAVEOOF = OUTPUT + "/OOF/Pytorch/"
 SAVEPLOT = OUTPUT + "/plot_history/"
+SAVEIMG = OUTPUT + "/plot_img/"
 
 #ARCH = EfficientNet.from_pretrained('efficientnet-b1')
 

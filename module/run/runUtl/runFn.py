@@ -3,9 +3,10 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 class runFunc:
-    def __init__(self):
+    def __init__(self, savePath):
         self.IMG_VSL_FLG_TRAIN = True
         self.IMG_VSL_FLG_VALID = True
+        self.savePath = savePath
 
     def train_fn(self, model, optimizer, scheduler, loss_fn, dataloader, device):
         model.train()
@@ -17,13 +18,15 @@ class runFunc:
             augLen: int = len(data['x'])
 
             # Augmentation Imageごとに予測
-            for dataAug in data['x']:
+            for i, dataAug in enumerate(data['x']):
                 # imageの可視化(最初のデータだけ)
                 if self.IMG_VSL_FLG_TRAIN:
                     img = dataAug[0].detach().cpu().numpy().transpose(1, 2, 0).astype("uint8").copy()
                     plt.axis('off')
                     plt.imshow(img)
-                    plt.show()
+                    plt.savefig(f'{self.savePath}Train_img_{i}.png')
+                    # plt.show()
+                    plt.close()
                     del img
 
                 optimizer.zero_grad()
@@ -52,13 +55,15 @@ class runFunc:
             outputs = torch.zeros_like(targets)
 
             # Augmentation Imageごとに予測
-            for dataAug in data['x']:
+            for i, dataAug in enumerate(data['x']):
                 # imageの可視化(最初のデータだけ)
                 if self.IMG_VSL_FLG_VALID:
                     img = dataAug[0].detach().cpu().numpy().transpose(1, 2, 0).astype("uint8").copy()
                     plt.axis('off')
                     plt.imshow(img)
-                    plt.show()
+                    plt.savefig(f'{self.savePath}Valid_img_{i}.png')
+                    # plt.show()
+                    plt.close()
                     del img
 
                 inputs = dataAug.to(device)

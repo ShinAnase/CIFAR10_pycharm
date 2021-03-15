@@ -40,7 +40,7 @@ def get_augmentation_Train():
 
     transformsCompo = [
         albu.Compose(transform1),
-        albu.Compose(transform2),
+        #albu.Compose(transform2),
         # albu.Compose(transform3),
     ]
 
@@ -75,7 +75,7 @@ def get_augmentation_TTA():
 
     transformsCompo = [
         albu.Compose(transform1),
-        albu.Compose(transform2),
+        #albu.Compose(transform2),
         # albu.Compose(transform3),
     ]
 

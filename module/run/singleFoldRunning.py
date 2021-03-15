@@ -83,7 +83,7 @@ def run_training(confFitting, Tester, Plotting, fold, seed, param,
         'train_loss': [],
         'valid_loss': [],
     }
-    fn = runFn.runFunc()
+    fn = runFn.runFunc(setting.SAVEIMG)
     best_epoch = 0.
     best_train_loss = 0.
 
@@ -123,6 +123,7 @@ def run_training(confFitting, Tester, Plotting, fold, seed, param,
         plt.ylabel('loss')
         plt.legend()
         plt.savefig(f'{setting.SAVEPLOT}Seed{seed}_Fold{fold}_history.png')
+        #plt.show()
         plt.close()
 
     del history
