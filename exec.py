@@ -1,5 +1,7 @@
 import numpy as np
 from sklearn import preprocessing
+import optuna
+import time
 
 #自作app
 from module import loading, preprocessing, CV_folds
@@ -9,15 +11,12 @@ from CIFAR10_pycharm.module.conf import setting, configAboutFitting
 import warnings
 warnings.filterwarnings('ignore')
 
-#HyperParameter
-param_space = {'hidden_size1': 512,
-               'hidden_size2': 512,
-               'dropOutRate1': 0.20393004966355735,
-               'dropOutRate2': 0.39170486751620137,
-               'leakyReluSlope': 0.01973893854348531,
-              }
 
-def Exec(param):
+def Exec(trial):
+    #Hyper parameter
+    param = {'hidden_size1': trial.suggest_categorical('hidden_size1', [128, 256, 512]),
+             'dropOutRate1': trial.suggest_uniform('dropOutRate1', 0.01, 0.5),
+             }
     # Tester(True/False)
     Tester = True
 
@@ -52,6 +51,16 @@ def Exec(param):
     # 課題提出
     # Submit(confFitting, predictions, test)
 
-    return score, oof, predictions
+    return score["Accuracy"]
+    #return score, oof, predictions
 
-score, oof, predictions = Exec(param_space)
+start = time.time()#時間計測用タイマー開始
+#score = Exec(optuna.trial.FixedTrial({'hidden_size1': 256,
+#                                      'dropOutRate1': 0.3}))
+study = optuna.create_study()
+study.optimize(Exec, n_trials=7)
+print(f"best param: {study.best_params}")
+print(f"best score: {study.best_value}")
+
+elapsed_time = (time.time() - start)/60/60
+print(f"Time：{elapsed_time}[h]")

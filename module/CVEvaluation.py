@@ -4,7 +4,7 @@ from CIFAR10_pycharm.module.conf import setting
 
 
 def Exec(confFitting, oof, target, targetOH):
-    score = []
+    score = {}
 
     # cross entropy
     y_true_OH = targetOH[confFitting["target_cols"]].values
@@ -16,7 +16,7 @@ def Exec(confFitting, oof, target, targetOH):
         score_logloss += score_ / targetOH.shape[1]
 
     print("CV cross entropy: ", score_logloss)
-    score.append(score_logloss)
+    score["Logloss"] = score_logloss
 
     # accuracy
     score_accuracy = 0
@@ -29,7 +29,7 @@ def Exec(confFitting, oof, target, targetOH):
     score_accuracy = accuracy_score(y_true, y_pred)
 
     print("CV accuracy: ", score_accuracy)
-    score.append(score_accuracy)
+    score["Accuracy"] = score_accuracy
 
     # OOF save
     np.save(setting.SAVEOOF + 'oof', y_pred_proba)
