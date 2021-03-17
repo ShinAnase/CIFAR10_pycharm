@@ -42,7 +42,6 @@ class Model(nn.Module):
 
     def forward(self, x):
         for i in range(len(self.layers)):
-            # print(x.shape)
             x = self.layers[i](x)
         x = F.avg_pool2d(x, kernel_size=x.size()[2:])
 

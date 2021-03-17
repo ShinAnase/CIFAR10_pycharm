@@ -55,12 +55,12 @@ def Exec(trial):
     #return score, oof, predictions
 
 start = time.time()#時間計測用タイマー開始
-#score = Exec(optuna.trial.FixedTrial({'hidden_size1': 256,
-#                                      'dropOutRate1': 0.3}))
-study = optuna.create_study()
-study.optimize(Exec, n_trials=7)
-print(f"best param: {study.best_params}")
-print(f"best score: {study.best_value}")
+score = Exec(optuna.trial.FixedTrial({'hidden_size1': 256,
+                                      'dropOutRate1': 0.3}))
+#study = optuna.create_study()
+#study.optimize(Exec, n_trials=7)
+#print(f"best param: {study.best_params}")
+#print(f"best score: {study.best_value}")
 
 elapsed_time = (time.time() - start)/60/60
 print(f"Time：{elapsed_time}[h]")

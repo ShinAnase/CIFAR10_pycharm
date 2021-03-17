@@ -128,7 +128,7 @@ def run_training(confFitting, Tester, Plotting, fold, seed, param,
 
     del history
 
-    # --------------------- PREDICTION---------------------
+    # --------------------- PREDICTION-------------------------
     # x_test = test[confFitting["feature_cols"]].values
     # testdataset = TestDataset(x_test)
     # testloader = torch.utils.data.DataLoader(testdataset, batch_size=BATCH_SIZE, shuffle=False)

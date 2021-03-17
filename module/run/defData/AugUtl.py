@@ -6,7 +6,7 @@ def get_transform():
         #albu.VerticalFlip(p=1),
         #albu.ChannelDropout(channel_drop_range=(1, 1), fill_value=0, p=1),
         #albu.CenterCrop(height=24, width=24, p=1.0),
-        albu.IAASharpen(alpha=(0.2, 0.5), lightness=(0.5, 1.0), p=1),
+        #albu.IAASharpen(alpha=(0.2, 0.5), lightness=(0.5, 1.0), p=1),
         #albu.Normalize(mean=(0,0,0), std=(1,1,1), max_pixel_value = 255.0, p=1.0),
     ]
     return albu.Compose(train_transform)

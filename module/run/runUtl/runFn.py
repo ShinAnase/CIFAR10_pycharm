@@ -25,7 +25,6 @@ class runFunc:
                     plt.axis('off')
                     plt.imshow(img)
                     plt.savefig(f'{self.savePath}Train_img_{i}.png')
-                    # plt.show()
                     plt.close()
                     del img
 
@@ -62,7 +61,6 @@ class runFunc:
                     plt.axis('off')
                     plt.imshow(img)
                     plt.savefig(f'{self.savePath}Valid_img_{i}.png')
-                    # plt.show()
                     plt.close()
                     del img
 
