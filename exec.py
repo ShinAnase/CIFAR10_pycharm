@@ -57,6 +57,7 @@ def Exec(trial):
 start = time.time()#時間計測用タイマー開始
 score = Exec(optuna.trial.FixedTrial({'hidden_size1': 256,
                                       'dropOutRate1': 0.3}))
+#tuning
 #study = optuna.create_study()
 #study.optimize(Exec, n_trials=7)
 #print(f"best param: {study.best_params}")
