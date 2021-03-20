@@ -40,13 +40,9 @@ def run_training(confFitting, Tester, Plotting, fold, seed, param,
     x_train, y_train  = train_df[confFitting["feature_cols"]].values, train_df[confFitting["target_cols"]].values
     x_valid, y_valid =  valid_df[confFitting["feature_cols"]].values, valid_df[confFitting["target_cols"]].values
 
-    # aumentation
-    transforms = Aug.get_transform()
-    train_augmentation = Aug.get_augmentation_Train()
-    valid_augmentation = Aug.get_augmentation_TTA()
 
-    train_dataset = Dt.TrainDataset(x_train, y_train, setting.AUGMENT_PRB, transforms, train_augmentation)
-    valid_dataset = Dt.TrainDataset(x_valid, y_valid, setting.AUGMENT_PRB, transforms, valid_augmentation)
+    train_dataset = Dt.TrainDataset(x_train, y_train, setting.AUGMENT_PRB)
+    valid_dataset = Dt.ValidDataset(x_valid, y_valid, setting.AUGMENT_PRB)
     trainloader = torch.utils.data.DataLoader(train_dataset, batch_size=setting.TRAIN_BATCH_SIZE, shuffle=True)
     validloader = torch.utils.data.DataLoader(valid_dataset, batch_size=setting.VALID_BATCH_SIZE, shuffle=False)
 
@@ -61,7 +57,7 @@ def run_training(confFitting, Tester, Plotting, fold, seed, param,
 
     optimizer = torch.optim.Adam(model.parameters(), lr=setting.LEARNING_RATE, weight_decay=setting.WEIGHT_DECAY)
     scheduler = optim.lr_scheduler.OneCycleLR(optimizer=optimizer, pct_start=0.1, div_factor=1e3,
-                                              max_lr=1e-2, epochs=setting.EPOCHS, steps_per_epoch=len(trainloader) * len(train_augmentation))
+                                              max_lr=1e-2, epochs=setting.EPOCHS, steps_per_epoch=len(trainloader) )
     # scheduler = sch.CosineAnnealingWarmupRestarts(optimizer,
     #                                              first_cycle_steps=200,
     #                                              cycle_mult=1.0,

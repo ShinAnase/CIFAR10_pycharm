@@ -17,29 +17,27 @@ class runFunc:
             outputs = torch.zeros_like(targets)
             augLen: int = len(data['x'])
 
-            # Augmentation Imageごとに予測
-            for i, dataAug in enumerate(data['x']):
-                # imageの可視化(最初のデータだけ)
-                if self.IMG_VSL_FLG_TRAIN:
-                    img = dataAug[0].detach().cpu().numpy().transpose(1, 2, 0).astype("uint8").copy()
-                    plt.axis('off')
-                    plt.imshow(img)
-                    plt.savefig(f'{self.savePath}Train_img_{i}.png')
-                    plt.close()
-                    del img
+            # imageの可視化(最初のデータだけ)
+            if self.IMG_VSL_FLG_TRAIN:
+                img = data['x'][0].detach().cpu().numpy().transpose(1, 2, 0).astype("uint8").copy()
+                plt.axis('off')
+                plt.imshow(img)
+                plt.savefig(f'{self.savePath}Train_img.png')
+                plt.close()
+                del img
 
-                optimizer.zero_grad()
-                inputs = dataAug.to(device)
-                outputs = model(inputs)
-                loss = loss_fn(outputs, targets)
-                loss.backward()
-                optimizer.step()
-                scheduler.step()
-                final_loss += loss.item()
+            optimizer.zero_grad()
+            inputs = data['x'].to(device)
+            outputs = model(inputs)
+            loss = loss_fn(outputs, targets)
+            loss.backward()
+            optimizer.step()
+            scheduler.step()
+            final_loss += loss.item()
 
             self.IMG_VSL_FLG_TRAIN = False
 
-        final_loss = final_loss / (len(dataloader) * augLen)
+        final_loss = final_loss / len(dataloader)
 
         return final_loss
 
@@ -69,11 +67,13 @@ class runFunc:
                 outputs += output
 
             self.IMG_VSL_FLG_VALID = False
+
             outputs /= len(data['x'])  # それぞれの予測を平均化（Test Time Augmentation）
             loss = loss_fn(outputs, targets)
 
             final_loss += loss.item()
             valid_preds.append(outputs.sigmoid().detach().cpu().numpy())
+
 
         final_loss /= len(dataloader)
         valid_preds = np.concatenate(valid_preds)

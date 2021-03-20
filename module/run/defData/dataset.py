@@ -1,17 +1,16 @@
 import random
 import torch
+import albumentations as albu
 
 # Train,Valid用のデータクラス
 class TrainDataset:
-    def __init__(self, features, targets, p: float = 1., transform=None, transformsAug=None):
+    def __init__(self, features, targets, p: float = 1.):
         self.features = features
         self.targets = targets
 
         # 1列のデータを画像としての形に整形
         self.features = self.features.reshape(self.features.shape[0], 3, 32, 32).astype("uint8")
         # augmentation
-        self.transform = transform
-        self.transformsAug = transformsAug
         self.p = p  # transformの使用有無の判断に使用
 
     def __len__(self):
@@ -20,57 +19,45 @@ class TrainDataset:
     def __getitem__(self, idx):
         x = self.features[idx, :]
 
-        if self.transform:
-            if random.random() < self.p:  # pの値を大きくするほどtransformの使用率が上がる。
-                augmented = self.transform(image=x)
-                x = augmented['image']
-                del augmented
 
-        X = []  # TTA別に画像をリスト化
-        if self.transformsAug:
-            for transformAug in self.transformsAug:
-                augmented = transformAug(image=x)
-                aug_tmp = torch.tensor(augmented['image'], dtype=torch.float)
-                X.append(aug_tmp)
-                del augmented
-        else:
-            x = torch.tensor(x, dtype=torch.float)
-            X.append(x)
+        if random.random() < self.p:  # pの値を大きくするほどtransformの使用率が上がる。
+            x = albu.HorizontalFlip(p=1)(image=x)['image']
 
         # torch.DataLoaderに入れるための形式
         dct = {
-            'x': X,
+            'x': torch.tensor(x, dtype=torch.float),
             'y': torch.tensor(self.targets[idx, :], dtype=torch.float)
         }
         return dct
 
 
 class ValidDataset:
-    def __init__(self, features, targets, transforms=None):
+    def __init__(self, features, targets, p: float = 1.):
         self.features = features
         self.targets = targets
 
         # 1列のデータを画像としての形に整形
         self.features = self.features.reshape(self.features.shape[0], 3, 32, 32).astype("uint8")
         # augmentation
-        self.transforms = transforms
+        self.p = p  # transformの使用有無の判断に使用
 
     def __len__(self):
         return (self.features.shape[0])
 
     def __getitem__(self, idx):
-        X = []  # TTA別に画像をリスト化
         x = self.features[idx, :]
 
-        if self.transforms:
-            for transform in self.transforms:
-                augmented = transform(image=x)
-                aug_tmp = torch.tensor(augmented['image'], dtype=torch.float)
-                X.append(aug_tmp)
-                del augmented
-        else:
-            x = torch.tensor(x, dtype=torch.float)
-            X.append(x)
+        transformsAugs = [
+            #[albu.ChannelDropout(channel_drop_range=(1, 1), fill_value=0, p=1)],
+            [],
+        ]
+
+        X = []  # TTA別に画像をリスト化
+        for transformAug in transformsAugs:
+            augmented = albu.Compose(transformAug)(image=x)
+            aug_tmp = torch.tensor(augmented['image'], dtype=torch.float)
+            X.append(aug_tmp)
+            del augmented
 
         # torch.DataLoaderに入れるための形式
         dct = {
@@ -78,7 +65,6 @@ class ValidDataset:
             'y': torch.tensor(self.targets[idx, :], dtype=torch.float)
         }
         return dct
-
 
 # Test用のデータクラス
 class TestDataset:
