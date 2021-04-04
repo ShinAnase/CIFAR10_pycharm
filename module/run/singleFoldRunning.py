@@ -6,7 +6,7 @@ import torch.optim as optim
 import matplotlib.pyplot as plt
 
 #自作app
-from CIFAR10_pycharm.module.run.defData import dataset as Dt, AugUtl as Aug
+from CIFAR10_pycharm.module.run.defData import dataset as Dt
 from CIFAR10_pycharm.module.run.arch import CNN
 from CIFAR10_pycharm.module.run.runUtl import runFn
 from CIFAR10_pycharm.module.conf import setting
